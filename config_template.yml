@@ -1,0 +1,40 @@
+# ============================================================================
+# Workshop Configuration Template
+# ============================================================================
+# Copy this file to config.yml and fill in your values:
+#   cp config_template.yml config.yml
+#
+# config.yml is gitignored — your real asset names stay local.
+# ============================================================================
+
+# ONLY CHANGE PARAMETERS IN BRACKETS, ex. <your_catalog>
+
+# Unity Catalog location for all workshop tables
+uc_catalog: <your_catalog>
+uc_schema: <your_schema>
+table_prefix: agent_demo
+table_postfix: <your_unique_suffix>  # e.g. _jdoe — avoids collisions in shared catalogs; this should be unique to you.
+
+# Volume name (PDF file location)
+volume_name: company_pdfs
+
+# Parsed document table name (ai_parse_document results)
+parsed_documents_table_name: parsed_docs
+
+# Document chunks table name (ai_prep_search results)
+document_chunks_table_name: document_chunks
+
+# Vector Search
+vs_endpoint_name: agent_demo_vs_endpoint
+vs_index_name: vs_index  # short name; MCP tool name must stay under 64 chars
+embedding_model: databricks-gte-large-en
+
+# Agent app vars
+genie_agent_id: <your_genie_space_id>
+app_code_dir: <your_app_code_dir>  # e.g. /Users/<you>/databricks_apps/<app_name>_<timestamp>/<app_name>
+
+# Row counts for synthetic data generation
+num_customers: 5000
+num_products: 500
+num_stores: 50
+num_orders: 100000
