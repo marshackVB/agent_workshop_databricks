@@ -104,6 +104,26 @@ When asked to "run all data notebooks" or "set up the data":
 5. Run `06_inventory`
 6. Confirm all 6 tables exist by querying the target catalog.schema
 
+### Notebook Execution Mechanism
+
+The workshop instructions notebook is the participant's home base. When asked to run a different notebook (data generation, upload_to_volume, document processing), the assistant **cannot execute cells remotely** from another page. Follow this approach:
+
+1. **Navigate to the target notebook** using `openAsset` with `assetType="notebook"` and the notebook's workspace ID.
+2. **Include a non-empty `continueMessage`** that tells the destination agent what to do (e.g., `"Run all code cells in this notebook to generate synthetic customer data. After completion, navigate back to notebook 1488764113540926."`)
+3. The agent on the destination page uses `runNotebookCells` to execute cells.
+4. After the notebook completes, navigate back to the workshop instructions notebook.
+
+For multi-notebook sequences (e.g., running all 6 data notebooks), navigate to each notebook in order, run its cells, then proceed to the next.
+
+**Why not `executeCode` with `dbutils.notebook.run()`?**
+This approach is often blocked by the auto-approval layer when notebooks contain DDL statements (`CREATE TABLE`, `CREATE VOLUME`, `CREATE SCHEMA`), which most workshop notebooks do. The `openAsset` + `continueMessage` handoff is the reliable path.
+
+**Why not `runNotebookCells` from the workshop notebook page?**
+`runNotebookCells` only works on the **currently active** notebook. You cannot remotely trigger cell execution in a notebook that isn't the open page.
+
+**Fallback — participant runs manually:**
+If execution is blocked or fails, navigate to the target notebook with `openAsset` and tell the participant to run the cells themselves. The cells are idempotent (`mode=overwrite`, `IF NOT EXISTS`) so re-running is always safe.
+
 ## Data Model — GlowMart
 
 GlowMart is a fictional beauty supply retailer with online and brick-and-mortar stores.
